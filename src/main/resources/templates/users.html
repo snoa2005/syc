@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="default">
+<head>
+    <title>Users</title>
+</head>
+<body>
+<div layout:fragment="content" class="row">
+    <div class="col-xs-8 col-md-8">
+        <!--
+        <h3>
+            <a href="/new" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> User</a>
+        </h3> -->
+        <h2>User List</h2>
+        <div class="table-responsive">
+            <table class="table" id="user-table">
+                <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>URL</th>
+                    <th>Sign up date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td><a th:text="${u.user}" th:href="@{'/users/' + ${u.id}}"></a></td>
+                    <td th:text="${u.email}"></td>
+                    <td th:text="${u.url}"></td>
+                    <td th:text="${u.signUpDate}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

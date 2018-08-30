@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="default">
+<head>
+    <title>Index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+
+    <!-- <link th:href="@{/css/jquery-ui.min.css}" rel="stylesheet"> -->
+    <link th:href="@{/css/bootstrap-dialog.min.css}" rel="stylesheet">
+    <link th:href="@{/css/ThemeDefault.css}" rel="stylesheet">
+
+    <!-- <script th:src="@{/js/jquery-ui.min.js}"></script> -->
+    <script th:src="@{/js/bootstrap-dialog.min.js}"></script>
+    <script th:src="@{/js/Editor.js}"></script>
+
+</head>
+<body>
+    <div layout:fragment="content">
+         <div class="container-fluid">
+             <div class="row" style="margin-top:10px;">
+                <div class="col-md-1 col-sm-1 col-xs-1 col-md-offset-1 col-sm-offset-1" style="padding-right:0;">
+                    <div id="barTools" class="palette">
+                        <div id="actionPalette" class="actions" data-title="Tools"><i class="fa fa-cog"></i></div>
+                        <div id="actionSave" class="actions palette" data-title="Save"><i class="fa fa-save"></i></div>
+                        <div id="actionUpload" class="actions palette" data-title="Upload"><i class="fa fa-upload"></i></div>
+                        <div id="actionRun" class="actions palette" data-title="Run"><i class="fa fa-bolt"></i></div>
+                        <div id="actionShare" class="actions palette" data-title="Share"><i class="fa fa-share-alt"></i></div>
+                        <div id="actionTrash" class="actions palette" data-title="Clean Code"><i class="fa fa-trash"></i></div>
+                        <div id="actionLock" class="actions palette" data-title="Lock"><i class="fa fa-unlock"></i></div>
+                        <div id="actionViewOutput" class="actions palette" data-title="Hide Output"><i class="fa fa-angle-double-up"></i></div>
+                        <div id="resultPalette" class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="configStyle">Style:</div>
+                                    <select class="form-control" style="width:100%;display:inline-block;" id="selectStyle">
+                                        <option value="Dark">Dark</option>
+                                        <option value="Light">Light</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="configStyle">Font:</div>
+                                    <select class="form-control" style="width:100%;display:inline-block;" id="selectFont">
+                                        <option value="Consolas">Consolas</option>
+                                        <option value="Monaco">Monaco</option>
+                                        <option value="Terminus">Terminus</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="configStyle">Size:</div>
+                                    <input type="range" min="15" max="20" value="15" class="form-control slider" id="selectSize" style="width:80%;display:inline-block;"/>
+                                    <span id="selectSizeValue" style="width:11%;display:inline-block;float: right;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="barToolsOutput" class="palette">
+                        <div id="actionCleanOutput" class="actions palette" data-title="Clean Output"><i class="fa fa-times-circle"></i></div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-10" style="padding-left:0;padding-right:0;">
+                    <div style="height:402px;"></div>
+                    <div id="outputDiv" class="palette"></div>
+                    <div id="table2" spellcheck="false"></div>
+                    <div id="table1" contenteditable="true" spellcheck="false" class="palette"></div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            Editor.init();
+        </script>
+    </div>
+</body>
+</html>

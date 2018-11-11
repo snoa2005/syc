@@ -1,12 +1,30 @@
 
 /*Se crea una clase en javascript*/	
 var Editor = Editor ||{
+	HeightWin: "",
+	HeightHeader: "",
+	HeightFooter: "",
+	Interval: "",
 	/*Inicialización de la clase*/
 	init: function(){
 		Editor.initEvents();
 	},	
 	
-	initEvents: function(){		
+	initEvents: function(){	
+		$(window).on('resize', function(){
+			Editor.HeightWin = $(this).height(); 
+			Editor.HeightHeader = $("#headerDiv").outerHeight();
+			Editor.HeightFooter = $("#footerDiv").outerHeight();
+			var heightOutPut = $("#outputDiv").outerHeight();
+			var total = Editor.HeightWin - Editor.HeightHeader - Editor.HeightFooter - heightOutPut;
+			var collaborateArea = Editor.HeightWin - Editor.HeightHeader - Editor.HeightFooter;
+			$("#table1").outerHeight(total - 20);
+			$("#table2").outerHeight(total - 20);
+			$("#divOculto").outerHeight(total - 20);
+			$("#collaborateArea").outerHeight(collaborateArea - 10);
+			$("#shareArea").height(collaborateArea < 600 ? collaborateArea/2 + 50: collaborateArea/2);
+			$(".contentChat").height((collaborateArea < 600 ? collaborateArea/2 + 50: collaborateArea/2) - 100);
+		});	
 		//Eventos fundamentales del editor
 		$("#table1").keyup(function(e){
 			var html = Editor.processText($(this).html());
@@ -15,9 +33,9 @@ var Editor = Editor ||{
 		});		
 		
 		$('#table1').on('keydown .editable', function(e){
-			if (e.keyCode == 9) {
+			if (e.keyCode === 9) { // tab key
+				e.preventDefault();  // this will prevent us from tabbing out of the editor
 				Editor.insertTab();
-				e.preventDefault();
 			}
 		});
 		
@@ -34,66 +52,38 @@ var Editor = Editor ||{
 		$("#selectStyle").change(function(){
 			if($(this).val() == "Dark"){
 				$("#table2,#outputDiv").addClass("themeDark").removeClass("themeLight");
-				$("#barTools").addClass("barToolsThemeDark").removeClass("barToolsThemeLight");
 				$("#barToolsOutput").addClass("barToolsOutputThemeDark").removeClass("barToolsOutputThemeLight");
-				$("#resultPalette").addClass("resultPaletteDark").removeClass("resultPaletteLight");
-				$(".actions").addClass("actionsDark").removeClass("actionsLight");
 				$("#table1").css("caret-color", "whitesmoke");
 				$('[data-lines]').attr("data-lines", "linesDark");
-				if($("#resultPalette").is(":visible")){
-					$("#actionPalette").addClass("actionPaletteDark").removeClass("actionPaletteLight");
-				}							
 			}
 			else{
 				$("#table2,#outputDiv").addClass("themeLight").removeClass("themeDark");
-				$("#barTools").addClass("barToolsThemeLight").removeClass("barToolsThemeDark");
 				$("#barToolsOutput").addClass("barToolsOutputThemeLight").removeClass("barToolsOutputThemeDark");
-				$("#resultPalette").addClass("resultPaletteLight").removeClass("resultPaletteDark");
-				$(".actions").addClass("actionsLight").removeClass("actionsDark");
 				$("#table1").css("caret-color", "black");
 				$('[data-lines]').attr("data-lines", "linesLight");
-				if($("#resultPalette").is(":visible")){
-					$("#actionPalette").addClass("actionPaletteLight").removeClass("actionPaletteDark");
-				}	
 			}
 			$("#table1").trigger("keyup");
-			$("#actionPalette").trigger("click");
 		});
 		
 		//Evento para el cambio de font
 		$("#selectFont").change(function(){
 			$("#table2,#table1").css("font-family", $(this).val());
-			$("#actionPalette").trigger("click");
 		});
+		
 		//Evento para el cambio de size font
 		$("#selectSize").change(function(){
 			$("#selectSizeValue").text($(this).val());
 			$("#table2,#table1").css("font-size", $(this).val()+"px");
-			$("#actionPalette").trigger("click");
 		});
 		
 		$("#selectStyle").trigger("change");
 		$("#selectFont").trigger("change");
 		$("#selectSize").trigger("change");
+		$(window).trigger("resize");
 		
-		//Eventos de la barra de tools		
-		$("#actionPalette").click(function(e){
-			$("#selectStyle").val() == "Dark" ? $("#actionPalette").addClass("actionPaletteDark").removeClass("actionPaletteLight") : $("#actionPalette").addClass("actionPaletteLight").removeClass("actionPaletteDark");
-			if($("#resultPalette").is(":visible")){
-				$("#actionPalette").removeClass("actionPaletteDark").removeClass("actionPaletteLight");
-			}			
-			$("#resultPalette").slideToggle("slow");
+		//Eventos de la barra de tools	
+		$(".tools").click(function(e){
 			e.stopPropagation();
-		});
-		
-		$("#resultPalette").click(function(e){
-			e.stopPropagation();
-		});
-		
-		$(".palette").click(function(e){
-			$("#resultPalette").slideUp("slow");
-			$("#actionPalette").removeClass("actionPaletteDark").removeClass("actionPaletteLight");
-			e.stopPropagation();			
 		});
 		
 		//Delete content
@@ -127,27 +117,49 @@ var Editor = Editor ||{
 			}
 		});
 		
-		$("#actionViewOutput").click(function(){
-			if($("#actionViewOutput i").hasClass("fa-angle-double-up")){
-				$("#actionViewOutput i").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
-				$(this).attr("data-title", "Show Output");
-			}
-			else{
-				$("#actionViewOutput i").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
-				$(this).attr("data-title", "Hide Output");
-			}
-			$("#outputDiv").slideToggle("slow");
-			$("#barToolsOutput").slideToggle("slow");
+		$("#actionCleanOutput").click(function(){
+			$("#textOutput").html("");
 		});
 		
-		$("#actionCleanOutput").click(function(){
-			$("#outputDiv").html("");
+		$("#actionShare").click(function(){
+			if($("#collaborateArea").length == 0){
+				clearInterval(Editor.Interval);
+				$("#codigoGeneralDiv").removeClass("col-md-12 col-sm-12 col-xs-12").addClass("col-md-9 col-sm-8 col-xs-9");
+				var height = Editor.HeightWin - Editor.HeightHeader - Editor.HeightFooter - 10;
+				var heightChat = height < 600 ? height/2 + 50: height/2;
+				var html = Editor.getHtmlChat(height, heightChat);
+				$("#codigoGeneralRowDiv").append(html);
+				$("#shareArea").slideToggle(2000);
+				
+				$("#collaborate").click(function(){
+					if($("#collaborate i").hasClass("fa-user-slash")){
+						$("#collaborate i").removeClass("fa-user-slash").addClass("fa-user");
+						$("#shareArea").slideToggle(2000);
+						Editor.Interval = setInterval(function(){ 
+							$("#codigoGeneralDiv").removeClass("col-md-9 col-sm-8 col-xs-9").addClass("col-md-12 col-sm-12 col-xs-12");
+							$("#collaborateArea").remove();
+						}, 2000);
+					}
+					else{
+						$("#collaborate i").removeClass("fa-user").addClass("fa-user-slash");
+					}
+				});
+				
+				$('#inputTextChat').keypress(function(event) {
+					if(event.keyCode == 13) {
+						//event.preventDefault();
+						//var	d = $(this).val();					
+						$('.contentChat').append($(this).val());
+						$(this).val("");
+					}
+				});
+			}
 		});
 	},
 	
 	processText:function(html){
 		var styles = Editor.stylesPredefined();		
-		//Add lines
+		//Add numbers lines
 		var linesStyle = $("#selectStyle").val() == "Dark" ? "linesDark" : "linesLight";
 		var lines = html.match(/<div>/g);
 		var	lastPosition = 0;
@@ -175,19 +187,18 @@ var Editor = Editor ||{
 	},
 	
 	insertTab:function(){
-		if (!window.getSelection) return;
-		  const sel = window.getSelection();
-		  if (!sel.rangeCount) return;
-		  const range = sel.getRangeAt(0);
-		  range.collapse(true);
-		  const span = document.createElement('span');
-		  span.appendChild(document.createTextNode('\t'));
-		  span.style.whiteSpace = 'pre';
-		  range.insertNode(span);
-		  range.setStartAfter(span);
-		  range.collapse(true);
-		  sel.removeAllRanges();
-		  sel.addRange(range);
+		var editor = document.getElementById("table1");
+		var doc = editor.ownerDocument.defaultView;
+		var sel = doc.getSelection();
+		var range = sel.getRangeAt(0);
+
+		var tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0");
+		range.insertNode(tabNode);
+
+		range.setStartAfter(tabNode);
+		range.setEndAfter(tabNode); 
+		sel.removeAllRanges();
+		sel.addRange(range);
 	},
 	
 	dialog: function(title, content, doAccept, doCancel, eventBefore){
@@ -238,6 +249,26 @@ var Editor = Editor ||{
 	
 	saveText:function(ftext){
 		console.log(ftext);
+	},
+	
+	getHtmlChat: function(height, heightChat){
+		var heightContent = heightChat - 100;
+		var html = "<div class='col-md-3 col-sm-4 col-xs-12' id='collaborateArea' style='height:" + height + "px;padding-left: 5px;'>"
+						+"<div id='shareArea' style='display:none;height:" + heightChat + "px;'>"
+							+"<div class='headerChat'>"
+								+"<div class='iconsChat' id='collaborate'><i class='fa fa-user'></i></div>"
+								+"<div class='iconsChat' id='microphone'><i class='fa fa-microphone'></i></div>"
+								+"<div class='iconsChat' id='video'><i class='fa fa-video'></i></div>"
+							+"</div>"
+							+"<div class='contentChat' style='height:"+heightContent+"px;'>"
+							+"</div>"
+							+"<div class='footerChat'>"
+								+"<input class='form-control' id='inputTextChat'/>"
+							+"</div>"
+						+ "</div>"
+					+"</div>"
+					
+		return html;
 	},
 	
 	stylesPredefined: function(){
@@ -403,47 +434,4 @@ var Editor = Editor ||{
 				}];
 		return styles;
 	},
-/*//Clase de ejemplo	
- public class Deposito implements clase{    
-    private float diametro;
-    private float altura;
-    private String idDeposito;
-    public Deposito () { 
-        this(0,0,"");            
-    }
-    public Deposito (float valor_diametro, float valor_altura, String valor_idDeposito) {
-        if (valor_diametro > 0 && valor_altura > 0) {
-            this.diametro = valor_diametro;
-            this.altura = valor_altura;
-            this.idDeposito = valor_idDeposito;
-        } else {
-            this.diametro = 10;
-            this.altura = 5;
-            idDeposito = "000";
-        }   
-	} 
-
-    public void setValoresDeposito (String valor_idDeposito, float valor_diametro, float valor_altura) {
-        idDeposito = valor_idDeposito;
-        diametro = valor_diametro;
-        altura = valor_altura;
-        if (idDeposito !="" && valor_diametro > 0 && valor_altura > 0) {
-        } else {
-            System.out.println ("Valores no admisibles. No se han establecido valores para el depósito");
-            idDeposito = "";
-            diametro = 0;
-            altura = 0;
-        }     
-	} 
-
-    public float getDiametro () { return diametro; } 
-    public float getAltura () { return altura; }
-    public String getIdDeposito () { return idDeposito; }
-    public float valorCapacidad () {
-        float capacidad;
-        float pi = 3.1416f; 
-        capacidad = pi * (diametro/2) * (diametro/2) * altura;
-        return capacidad;
-    } 
-} */
 }

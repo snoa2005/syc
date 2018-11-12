@@ -9,68 +9,97 @@
 
     <!-- <link th:href="@{/css/jquery-ui.min.css}" rel="stylesheet"> -->
     <link th:href="@{/css/bootstrap-dialog.min.css}" rel="stylesheet">
-    <link th:href="@{/css/ThemeDefault.css}" rel="stylesheet">
+    <link th:href="@{/css/ThemeDefault2.css}" rel="stylesheet">
 
     <!-- <script th:src="@{/js/jquery-ui.min.js}"></script> -->
     <script th:src="@{/js/bootstrap-dialog.min.js}"></script>
     <script th:src="@{/js/Editor.js}"></script>
 
 </head>
-<body>
+<body style="background-image:url(images/logo6.png)">
     <div layout:fragment="content">
-         <div class="container-fluid">
-             <div class="row" style="margin-top:10px;">
-                <div class="col-md-1 col-sm-1 col-xs-1 col-md-offset-1 col-sm-offset-1" style="padding-right:0;">
-                    <div id="barTools" class="palette">
-                        <div id="actionPalette" class="actions" data-title="Tools"><i class="fa fa-cog"></i></div>
-                        <div id="actionSave" class="actions palette" data-title="Save"><i class="fa fa-save"></i></div>
-                        <div id="actionUpload" class="actions palette" data-title="Upload"><i class="fa fa-upload"></i></div>
-                        <div id="actionRun" class="actions palette" data-title="Run"><i class="fa fa-bolt"></i></div>
-                        <div id="actionShare" class="actions palette" data-title="Share"><i class="fa fa-share-alt"></i></div>
-                        <div id="actionTrash" class="actions palette" data-title="Clean Code"><i class="fa fa-trash"></i></div>
-                        <div id="actionLock" class="actions palette" data-title="Lock"><i class="fa fa-unlock"></i></div>
-                        <div id="actionViewOutput" class="actions palette" data-title="Hide Output"><i class="fa fa-angle-double-up"></i></div>
-                        <div id="resultPalette" class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
+        <nav class="navbar navbar-inverse" style="border-radius:0;margin-bottom:10px;" id="headerDiv">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#" style="padding-top:5px;">
+                        <img alt="Share you code" src="images/logo3.png" style="width:85px;">
+                    </a>
+                    <a class="navbar-brand" href="#" style="padding-top:20px;">
+                        <span style="color:#ccc;">Share your code</span>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#"><div id="actionRun" class="actions" data-title="Run"><i class="fa fa-bolt"></i></div></a></li>
+                        <li><a href="#"><div id="actionSave" class="actions" data-title="Save"><i class="fa fa-save"></i></div></a></li>
+                        <li><a href="#"><div id="actionUpload" class="actions" data-title="Upload"><i class="fa fa-upload"></i></div></a></li>
+                        <li><a href="#"><div id="actionShare" class="actions" data-title="Share"><i class="fa fa-share-alt"></i></div></a></li>
+                        <li><a href="#"><div id="actionTrash" class="actions" data-title="Clean Code"><i class="fa fa-trash"></i></div></a></li>
+                        <li><a href="#"><div id="actionLock" class="actions" data-title="Lock"><i class="fa fa-unlock"></i></div></a></li>
+                        <li class="dropdown actions" style="padding-bottom: 2px;">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-title="Tools"><i class="fa fa-cog"></i></a>
+                            <ul class="dropdown-menu tools">
+                                <li><a href="#">
                                     <div class="configStyle">Style:</div>
                                     <select class="form-control" style="width:100%;display:inline-block;" id="selectStyle">
                                         <option value="Dark">Dark</option>
                                         <option value="Light">Light</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    </select></a>
+                                </li>
+                                <li><a href="#">
                                     <div class="configStyle">Font:</div>
                                     <select class="form-control" style="width:100%;display:inline-block;" id="selectFont">
                                         <option value="Consolas">Consolas</option>
                                         <option value="Monaco">Monaco</option>
                                         <option value="Terminus">Terminus</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                </a></li>
+                                <li><a href="#">
                                     <div class="configStyle">Size:</div>
                                     <input type="range" min="15" max="20" value="15" class="form-control slider" id="selectSize" style="width:80%;display:inline-block;"/>
                                     <span id="selectSizeValue" style="width:11%;display:inline-block;float: right;"></span>
-                                </div>
+                                </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown actions" style="padding-bottom: 2px;" >
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Save configuration</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Close session</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid" style="padding-left:0px;">
+            <div class="row" id="codigoGeneralRowDiv">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="codigoGeneralDiv">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div style="" id="divOculto"></div>
+                        <div id="table2" spellcheck="false"></div>
+                        <div id="table1" contenteditable="true" spellcheck="false"></div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div id="barToolsOutput" class="">
+                            <div id="actionCleanOutput" class="actions"><i class="fa fa-times-circle"></i></div>
+                        </div>
+                        <div id="outputDiv">
+                            <div id="textOutput">
                             </div>
                         </div>
                     </div>
-                    <div id="barToolsOutput" class="palette">
-                        <div id="actionCleanOutput" class="actions palette" data-title="Clean Output"><i class="fa fa-times-circle"></i></div>
-                    </div>
-                </div>
-                <div class="col-md-8 col-sm-8 col-xs-10" style="padding-left:0;padding-right:0;">
-                    <div style="height:402px;"></div>
-                    <div id="outputDiv" class="palette"></div>
-                    <div id="table2" spellcheck="false"></div>
-                    <div id="table1" contenteditable="true" spellcheck="false" class="palette"></div>
                 </div>
             </div>
         </div>
+        <nav class="navbar navbar-inverse navbar-fixed-bottom" style="border-radius:0;" id="footerDiv">
+            <div class="container-fluid">
+
+            </div>
+        </nav>
         <script type="text/javascript">
             Editor.init();
         </script>
